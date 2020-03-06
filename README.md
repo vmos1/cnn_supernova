@@ -18,7 +18,10 @@ For further information refer: https://arxiv.org/abs/1504.02936v3
 #### Raw downloaded data at: 
 /global/project/projectdirs/dasrepo/vpa/supernova_cnn/data/raw_data
 #### Data created after using the preprocessing codes is stored at:
+/global/project/projectdirs/dasrepo/vpa/supernova_cnn/data/gathered_data/temp_data
+#### Preprocessed data is stored at
 /global/project/projectdirs/dasrepo/vpa/supernova_cnn/data/gathered_data
+(It needs to be moved manually. This is to ensure that accidental running of the code doesn't overwrite the data.)
 #### The results are stored at : 
 /global/project/projectdirs/dasrepo/vpa/supernova_cnn/data/results_data/results
 
