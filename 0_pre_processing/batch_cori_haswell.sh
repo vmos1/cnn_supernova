@@ -11,5 +11,5 @@
 
 echo "--start date" `date` `date +%s`
 export OMP_NUM_THREADS=32
-python 4c_extract_to_npy.py -b 1000 -c 32
+python 4_extract_to_npy.py -b 1000 -c 32
 echo "--end date" `date` `date +%s`
