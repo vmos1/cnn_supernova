@@ -173,7 +173,7 @@ if __name__=='__main__':
     np.save(save_location+'initial_idx_arr.npy',idx_arr)  ### Save the ID file for final comparison
     
     t2=time.time()
-    print("Setup time (reading the Datarame) ",t2-t1)
+    print("Setup time (reading the DataFrame) ",t2-t1)
     
     data_size=idx_arr.shape[0]
     batch_size=min(batch_size,data_size) ### Fix for large batch size
