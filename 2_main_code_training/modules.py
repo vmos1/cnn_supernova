@@ -13,31 +13,11 @@ from models import f_define_model
 from tensorflow.keras import callbacks
 
 
-
-
 def f_load_config(config_file):
     with open(config_file) as f:
         config = yaml.load(f, Loader=yaml.SafeLoader)
     return config
 
-def f_get_data(data_dir):
-    '''
-    Function to get data from .npy files into images and labels.
-    '''
-    try:
-        
-        #images=np.load(data_dir+prefix+'_x.npy')
-        images=np.load(data_dir+'full_x.npy')
-        labels=np.load(data_dir+'full_y.npy')
-    except Exception as e:
-        print(e)
-        raise SystemExit
-
-    
-    keys=['images','labels']
-    values_dict=dict(zip(keys,[images,labels]))
-    
-    return values_dict
 
 
 def f_train_model(model,inpx,inpy,model_weights,num_epochs=5,batch_size=64,val_x=None,val_y=None):
@@ -48,21 +28,22 @@ def f_train_model(model,inpx,inpy,model_weights,num_epochs=5,batch_size=64,val_x
         cv_fraction=0.33 # Fraction of data for cross validation
         print("Using {0} % of training data as validation".format(cv_fraction))
     
+#     callbacks_list=[]
+    callbacks_lst=[callbacks.EarlyStopping(monitor='val_loss', patience=40, verbose=1)]
+    callbacks_lst.append(callbacks.ModelCheckpoint(model_weights, save_best_only=True, monitor='val_loss', mode='min'))
+    
     history=model.fit(x=inpx, y=inpy,
                     batch_size=batch_size,
                     epochs=num_epochs,
                     verbose=1,
-                    callbacks = [callbacks.EarlyStopping(monitor='val_loss', patience=40, verbose=1),
-                                 callbacks.ModelCheckpoint(model_weights, save_best_only=True, monitor='val_loss', mode='min') ],
+                    callbacks =callbacks_lst,
                     #validation_split=cv_fraction,
                     validation_data=(val_x,val_y),
-                    shuffle=True
-                )
+                    shuffle=True)
     
     print("Number of parameters",model.count_params())
     
     return history.history
-
 
 
 def f_test_model(model,xdata,ydata):
@@ -80,7 +61,4 @@ def f_test_model(model,xdata,ydata):
     if (len(y_pred.shape)==2 and y_pred.shape[1]==2) : y_pred=y_pred[:,1]
 
     return y_pred
-
-
-    
 

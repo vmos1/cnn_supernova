@@ -1,8 +1,8 @@
-# The main code for training a CNN on the ATLAS SUSY 2D images
-# Created by Venkitesh Ayyar. August 19, 2019
+# The main code for training a CNN on the DESS Supernova images.
+### Created by Venkitesh Ayyar (vpa@lbl.gov)
+### March 7, 2020 
 
 import numpy as np
-import matplotlib.pyplot as plt
 import pandas as pd
 import time
 import argparse
@@ -23,6 +23,8 @@ from tensorflow.keras.models import load_model
 ## modules from other files
 from models import *
 from modules import *
+from utils import dataset, cnn_model, f_get_data
+
 
 def parse_args():
     """Parse command line arguments."""
@@ -39,11 +41,12 @@ def parse_args():
 
 
 if __name__=='__main__':
-
+    
     args=parse_args()
     print(args)
     ## Note: --train means models needs to be trained. hence train_status=False
     model_lst=args.mod_lst
+    
     ##### Stuff for GPU #####
     if args.gpu!='None': 
         script_loc={'maeve':'/home/vpa/standard_scripts/','cori':'/global/u1/v/vpa/standard_scripts/'}
@@ -54,6 +57,7 @@ if __name__=='__main__':
         configure_session(intra_threads=32, inter_threads=2, blocktime=1, affinity='granularity=fine,compact,1,0')
     
     t1=time.time()
+    
     ### Read configuration ###
     config_file=args.config
     config_dict=f_load_config(config_file)
@@ -61,33 +65,34 @@ if __name__=='__main__':
     
     batch_size=config_dict['training']['batch_size']
     num_epochs=config_dict['training']['n_epochs']
+    model_save_dir=config_dict['output_dir']
+
     
     ### Extract data ###
     
     data_dir=config_dict['data']['data_dir']
-    #prefix=config_dict['data']['prefix']
-    #### Training data
-    data_dict=f_get_data(data_dir)
+    prefix=config_dict['data']['prefix']
+    #### Read data from files 
+    data_dict=f_get_data(prefix,data_dir)
     
     size_data=data_dict['labels'].shape[0]
-    print("Size of entire data: ",size_data)
-    ### Define the indices for training, validation and test data
+    print("Size of entire dataset is : ",size_data)
+    #### Define the indices for training, validation and test data
     train_idx=int(0.3*size_data)
     val_idx=train_idx+int(0.05*size_data)
-    test_idx=val_idx+int(0.05*size_data)
-
+    test_idx=train_idx+val_idx+int(0.05*size_data)
     
-    train_x,train_y=data_dict['images'][:train_idx],data_dict['labels'][:train_idx]
-    val_x,val_y=data_dict['images'][train_idx:val_idx],data_dict['labels'][train_idx:val_idx]
+    #### Storing arrays into train,validation, test objects and deleting the full data dictionary
+    train_data=dataset('training',data_dict,start_idx=0,end_idx=train_idx)
+    val_data=dataset('validation',data_dict,start_idx=train_idx,end_idx=val_idx)
+    test_data=dataset('test',data_dict,start_idx=val_idx,end_idx=val_idx)
+    del data_dict
 
-    print("Train data shape",train_x.shape,train_y.shape)
-    print("Validation data shape",val_x.shape,val_y.shape)
+    print("Data shapes: Train {0}, Validation {1}, Test {2}".format(train_data.x.shape,val_data.x.shape,test_data.x.shape))
 
     t2=time.time()
     print("Time taken to read files",t2-t1)
-    
-    model_save_dir=config_dict['output_dir']
-    
+        
     for i in model_lst:
         model_name=str(i)
 
@@ -101,7 +106,7 @@ if __name__=='__main__':
         if args.train: # If model hasn't been trained, train and save files
             
             ### Train model ###
-            history=f_train_model(model,train_x,train_y,model_weights=model_save_dir+fname_model_wts,num_epochs=num_epochs,batch_size=batch_size,val_x=val_x,val_y=val_y)
+            history=f_train_model(model,train_data.x,train_data.y,model_weights=model_save_dir+fname_model_wts,num_epochs=num_epochs,batch_size=batch_size,val_x=val_data.x,val_y=val_data.y)
  
             ### Save model and history ###
             fname_model,fname_history='model_{0}.h5'.format(model_name),'history_{0}.pickle'.format(model_name)
@@ -125,11 +130,9 @@ if __name__=='__main__':
         #################################
         ### Test model ###
 
-        ## Read Test_data
-        test_x,test_y=data_dict['images'][val_idx:test_idx],data_dict['labels'][val_idx:test_idx]
-        print("Test data shape",test_x.shape,test_y.shape)
+        ## Make prediction on test data using model 
         
-        y_pred=f_test_model(model,test_x,test_y)   ### Prediction using model
+        y_pred=f_test_model(model,test_data.x,test_data.y)   ### Prediction using model
 
         ## Save the predictions on test data for the labels, for roc curve
         fname_ypred='ypred_{0}.test'.format(model_name)
