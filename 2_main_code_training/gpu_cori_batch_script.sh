@@ -20,5 +20,7 @@ module load tensorflow/gpu-1.15.0-py37
 #conda activate v_py3
 ### Actual script to run
 python main.py --train --config config_cori.yaml --gpu cori --model_list $1
+### To test existing model
+#python main.py --config config_cori.yaml --gpu cori --model_list $1
 #conda deactivate v_py3
 echo "--end date" `date` `date +%s`

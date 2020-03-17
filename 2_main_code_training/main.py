@@ -3,11 +3,10 @@
 ### March 7, 2020 
 
 import numpy as np
-import pandas as pd
+#import pandas as pd
 import time
 import argparse
 import sys
-
 import subprocess as sp
 import pickle
 import yaml
@@ -22,8 +21,7 @@ from tensorflow.keras.models import load_model
 
 ## modules from other files
 from models import *
-from modules import *
-from utils import dataset, cnn_model, f_get_data
+from utils import dataset, cnn_model, f_get_data, f_load_config
 
 
 def parse_args():
@@ -66,10 +64,8 @@ if __name__=='__main__':
     batch_size=config_dict['training']['batch_size']
     num_epochs=config_dict['training']['n_epochs']
     model_save_dir=config_dict['output_dir']
-
     
     ### Extract data ###
-    
     data_dir=config_dict['data']['data_dir']
     prefix=config_dict['data']['prefix']
     #### Read data from files 
@@ -80,67 +76,47 @@ if __name__=='__main__':
     #### Define the indices for training, validation and test data
     train_idx=int(0.3*size_data)
     val_idx=train_idx+int(0.05*size_data)
-    test_idx=train_idx+val_idx+int(0.05*size_data)
+    test_idx=val_idx+int(0.05*size_data)
     
     #### Storing arrays into train,validation, test objects and deleting the full data dictionary
     train_data=dataset('training',data_dict,start_idx=0,end_idx=train_idx)
     val_data=dataset('validation',data_dict,start_idx=train_idx,end_idx=val_idx)
-    test_data=dataset('test',data_dict,start_idx=val_idx,end_idx=val_idx)
+    test_data=dataset('test',data_dict,start_idx=val_idx,end_idx=test_idx)
     del data_dict
 
-    print("Data shapes: Train {0}, Validation {1}, Test {2}".format(train_data.x.shape,val_data.x.shape,test_data.x.shape))
-
+    print("\nData shapes: Train {0}, Validation {1}, Test {2}\n".format(train_data.x.shape,val_data.x.shape,test_data.x.shape))
+    
     t2=time.time()
     print("Time taken to read files",t2-t1)
-        
+     
+    #### ML part ####
+    
     for i in model_lst:
         model_name=str(i)
-
-        ### Compile model ###
-        # Declare names of files for storing model, model weights, history
-        fname_model,fname_model_wts,fname_history='model_{0}.h5'.format(model_name),'model_wts_{0}.h5'.format(model_name),'history_{0}.pickle'.format(model_name)
-
-        ### Define model 
+        
+        ### Define Object for cnn_model
+        Model=cnn_model(model_name,model_save_dir)
+        
+        ### Define the keras ML model and store in the object
         model=f_define_model(config_dict,name=model_name)
+        Model.f_build_model(model)
         
         if args.train: # If model hasn't been trained, train and save files
-            
             ### Train model ###
-            history=f_train_model(model,train_data.x,train_data.y,model_weights=model_save_dir+fname_model_wts,num_epochs=num_epochs,batch_size=batch_size,val_x=val_data.x,val_y=val_data.y)
- 
+            Model.f_train_model(train_data,val_data,num_epochs=num_epochs,batch_size=batch_size)
+            
             ### Save model and history ###
-            fname_model,fname_history='model_{0}.h5'.format(model_name),'history_{0}.pickle'.format(model_name)
-
-            model.save(model_save_dir+fname_model)
-            with open(model_save_dir+fname_history, 'wb') as f:
-                pickle.dump(history, f)
-         
+            Model.f_save_model_history()
+        
         else: # If using pre-trained model, check if files exist and load them.
             print("Using trained model")
-            ### Read model and history
-
-            ## Check if files exist
-            assert os.path.exists(model_save_dir+fname_model),"Model not saved: %s"%(model_save_dir+fname_model)
-            assert os.path.exists(model_save_dir+fname_history),"History not saved"
-
-            model=load_model(model_save_dir+fname_model)
-            with open(model_save_dir+fname_history,'rb') as f:
-                history= pickle.load(f)
+            ### Read stored model and history
+            Model.f_load_model_history()
 
         #################################
         ### Test model ###
-
-        ## Make prediction on test data using model 
+        Model.f_test_model(test_data)
         
-        y_pred=f_test_model(model,test_data.x,test_data.y)   ### Prediction using model
-
-        ## Save the predictions on test data for the labels, for roc curve
-        fname_ypred='ypred_{0}.test'.format(model_name)
-        np.savetxt(model_save_dir+fname_ypred,y_pred)
+        ### Save prediction array and labels array
+        Model.f_save_predictions(test_data)
         
-        ## Save the test data labels for roc curve 
-        ### This is just the test data, but it is useful to save it, to make the analysis part simpler
-        fname_ytest='ytest_{0}.test'.format(model_name)
-        np.savetxt(model_save_dir+fname_ytest,test_y)
-        
-

@@ -61,7 +61,8 @@ def f_model_prototype(shape,**model_dict):
     
 def f_define_model(config_dict,name='1'):
     '''
-    Function that defines the model and compiles it.
+    Function that defines the model and compiles it. 
+    Reads in a dictionary with parameters for CNN model prototype and returns a keral model
     '''
     ### Extract info from the config_dict
     shape=config_dict['model']['input_shape']
@@ -111,13 +112,8 @@ def f_define_model(config_dict,name='1'):
     if name=='14': # Striding single conv
         model_par_dict={'conv_size_list':[10,10,10],'kernel_size':(3,3), 'no_pool':True,'pool_size':(2,2), 'strides':[3,3,3,3], 'learn_rate':0.001,
                         'inner_dropout':0.1, 'outer_dropout':0.5,'dense_size':51,'final_activation':'sigmoid','double_conv':True} 
-        
-    elif name=='2': # Simple layered, without inner dropout
-        model_par_dict={'conv_size_list':[10,10,10],'kernel_size':(3,3),'pool_size':(2,2), 'strides':1, 'no_pool':False, 'learn_rate':0.001, 'outer_dropout':0.5,
-        'inner_dropout':None,'dense_size':64,'final_activation':'sigmoid','double_conv':False}
 
-
-    elif name=='0':  # Model used in ATLAS paper
+    elif name=='0':
         custom_model=True
         learn_rate=0.001 
         
@@ -131,7 +127,7 @@ def f_define_model(config_dict,name='1'):
         h = Flatten()(h)
         h = Dense(512, activation='relu')(h)
         y = Dense(1, activation='sigmoid')(h)
-
+        
         # Ouptut layer
         outputs = layers.Dense(1, activation='sigmoid')(h)
        
@@ -141,14 +137,14 @@ def f_define_model(config_dict,name='1'):
         learn_rate=0.0005
         resnet=True
     
-    elif name=='101': # Resnet 50
+    elif name=='101': # Resnet 18
         inputs = layers.Input(shape=shape)
         model = ResNet18(img_input=inputs)
         learn_rate=0.0005
         resnet=True
 
     ### A custom layered cnn is name=0
-    elif name=='30': 
+    elif name=='30':
         custom_model=True
         learn_rate=0.001 
         inputs = layers.Input(shape=shape)

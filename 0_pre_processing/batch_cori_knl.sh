@@ -1,7 +1,7 @@
 #!/bin/bash
 #################
 #SBATCH --nodes=1
-#SBATCH --time=04:00:00
+#SBATCH --time=08:00:00
 #SBATCH --qos=regular
 #SBATCH --job-name=supernova_extract_data_knl
 #SBATCH --output=slurm-%x-%j.out

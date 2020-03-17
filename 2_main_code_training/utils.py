@@ -3,6 +3,17 @@
 ### March 7, 2020
 
 import numpy as np
+import yaml
+from tensorflow.keras.models import load_model
+from tensorflow.keras import callbacks
+import pickle
+import os
+
+
+def f_load_config(config_file):
+    with open(config_file) as f:
+        config = yaml.load(f, Loader=yaml.SafeLoader)
+    return config
 
 def f_get_data(prefix,data_dir):
     '''
@@ -21,6 +32,10 @@ def f_get_data(prefix,data_dir):
     
     return values_dict
 
+
+###############################
+### Classes used ###
+###############################
 class dataset:
     '''
     Class to store datasets. Example objects: train_data,val_data,test_data
@@ -32,21 +47,101 @@ class dataset:
 
         self.x,self.y,self.id=data_dict['images'][start_idx:end_idx],data_dict['labels'][start_idx:end_idx],data_dict['labels'][start_idx:end_idx]
 
-        
+
         
 class cnn_model:
     '''
     Class to store features of cnn model such as : model_name, wts_filename, history_filename,
     '''
-    def __init(self,name,wts,hist):
-        self.name=name
-        self.wts_fname=wts
-        self.history_fname=hist
     
-        self.cnn_model=f_define_model()
-
+    def __init__(self,model_name,model_save_dir):
+        
+        ### Initialization ###
+        self.name=model_name
+        #Declare names of files for storing model, model weights, history
+        self.fname_model=model_save_dir+'model_{0}.h5'.format(model_name)
+        self.fname_model_wts=model_save_dir+'model_wts_{0}.h5'.format(model_name)
+        self.fname_history=model_save_dir+'history_{0}.pickle'.format(model_name)
+        self.fname_ypred=model_save_dir+'ypred_{0}.test'.format(model_name)
+        self.fname_ytest=model_save_dir+'ytest_{0}.test'.format(model_name)
         
 
+    def f_build_model(self,model):
+        '''Store model in the class member. Reads in a keras model   '''
+        self.cnn_model=model
+        
+    def f_train_model(self,train_data,val_data,num_epochs=5,batch_size=64):
+#         model,inpx,inpy,model_weights):
+        '''
+        Train model. Returns just history.history
+        '''
+        ###callbacks_list=[]
+        callbacks_lst=[callbacks.EarlyStopping(monitor='val_loss', patience=40, verbose=1)]
+        callbacks_lst.append(callbacks.ModelCheckpoint(self.fname_model_wts, save_best_only=True, monitor='val_loss', mode='min'))
+        
+        model=self.cnn_model
+        history=model.fit(x=train_data.x, y=train_data.y,
+                        batch_size=batch_size,
+                        epochs=num_epochs,
+                        verbose=1,
+                        callbacks=callbacks_lst,
+                        #validation_split=cv_fraction,
+                        validation_data=(val_data.x,val_data.y),
+                        shuffle=True)
+
+        print("Number of parameters",model.count_params())
+
+        self.history=history.history       
+
+    
+    def f_save_model_history(self):
+        ''' Save model and history'''
+        
+        self.cnn_model.save(self.fname_model)
+        with open(self.fname_history, 'wb') as f:
+            pickle.dump(self.history, f)
+    
+    def f_load_model_history(self):
+        ''' For pre-trained model, load model and history'''
+        
+        ## Check if files exist
+        assert os.path.exists(self.fname_model),"Model not saved: %s"%(self.fname_model)
+        assert os.path.exists(self.fname_history),"History not saved: %s"%(self.fname_history)
+        
+        ## Load data from files
+        self.cnn_model=load_model(self.fname_model)
+        with open(self.fname_history,'rb') as f:  history= pickle.load(f)        
+    
+    def f_test_model(self,test_data):
+        '''
+        Test model and return array with predictions
+        '''
+        model=self.cnn_model
+#         model.evaluate(test_data.x,test_data.y,sample_weights=wts,verbose=1)
+        print(test_data.x.shape)
+        y_pred=model.predict(test_data.x,verbose=1)
+        ### Ensure prediction has the same size as labelled data.
+        
+        assert(test_data.y.shape[0]==y_pred.shape[0]),"Data %s and prediction arrays %s are not of the same size"%(test_data.y.shape,y_pred.shape)
+        
+        ##Condition for the case when the prediction is a 2column array 
+        ## This complicated condition is needed since the array has shape (n,1) when created, but share (n,) when read from file.
+        if (len(y_pred.shape)==2 and y_pred.shape[1]==2) : y_pred=y_pred[:,1]
+        
+        ### Store predictions to the class object
+        self.y_pred=y_pred
+    
+    def f_save_predictions(self,test_data):
+        ''' Save predictions for test data and the actual test data labels'''
+        
+        ## Save the predictions on test data for the labels, for roc curve
+        np.savetxt(self.fname_ypred,self.y_pred)
+        
+        ## Save the test data labels for roc curve 
+        ### This is just the test data, but it is useful to save it, to make the analysis part simpler
+        np.savetxt(self.fname_ytest,test_data.y)
+            
+        
 class trained_model:
     '''
     Class to extract data of trained model
