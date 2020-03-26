@@ -61,7 +61,8 @@ def f_model_prototype(shape,**model_dict):
     
 def f_define_model(config_dict,name='1'):
     '''
-    Function that defines the model and compiles it.
+    Function that defines the model and compiles it. 
+    Reads in a dictionary with parameters for CNN model prototype and returns a keral model
     '''
     ### Extract info from the config_dict
     shape=config_dict['model']['input_shape']
@@ -73,51 +74,71 @@ def f_define_model(config_dict,name='1'):
     
     # Choose model
     if name=='1': # Simple layered, with inner dropout
-        model_par_dict={'conv_size_list':[10,10,10],'kernel_size':(3,3), 'no_pool':False,'pool_size':(2,2), 'strides':1, 'learn_rate':0.001,
-                        'inner_dropout':0.1, 'outer_dropout':0.5,'dense_size':80,'final_activation':'sigmoid','double_conv':False}
+        model_par_dict={'conv_size_list':[40,40,40],'kernel_size':(3,3), 'no_pool':False,'pool_size':(2,2), 'strides':1, 'learn_rate':0.001,
+                        'inner_dropout':0.1, 'outer_dropout':0.3,'dense_size':51,'final_activation':'sigmoid','double_conv':False}
     if name=='2': # Simple layered, without inner dropout
-        model_par_dict={'conv_size_list':[10,10,10],'kernel_size':(3,3), 'no_pool':False,'pool_size':(2,2), 'strides':1, 'learn_rate':0.001,
-                        'inner_dropout':None, 'outer_dropout':0.5,'dense_size':80,'final_activation':'sigmoid','double_conv':False}        
+        model_par_dict={'conv_size_list':[40,40,40],'kernel_size':(3,3), 'no_pool':False,'pool_size':(2,2), 'strides':1, 'learn_rate':0.001,
+                        'inner_dropout':None, 'outer_dropout':0.3,'dense_size':51,'final_activation':'sigmoid','double_conv':False}        
     if name=='3': # Simple layered, with inner dropout
-        model_par_dict={'conv_size_list':[10,10,10],'kernel_size':(3,3), 'no_pool':False,'pool_size':(2,2), 'strides':1, 'learn_rate':0.001,
-                        'inner_dropout':0.1, 'outer_dropout':0.5,'dense_size':51,'final_activation':'sigmoid','double_conv':True}        
+        model_par_dict={'conv_size_list':[80,80,80],'kernel_size':(3,3), 'no_pool':False,'pool_size':(2,2), 'strides':1, 'learn_rate':0.001,
+                        'inner_dropout':None, 'outer_dropout':0.3,'dense_size':51,'final_activation':'sigmoid','double_conv':False}        
     if name=='4': # Simple layered, with inner dropout
         model_par_dict={'conv_size_list':[10,10,10],'kernel_size':(3,3), 'no_pool':False,'pool_size':(2,2), 'strides':1, 'learn_rate':0.001,
                         'inner_dropout':0.1, 'outer_dropout':0.5,'dense_size':51,'final_activation':'sigmoid','double_conv':True}
-    
     if name=='5': # Simple layered, with inner dropout
-        model_par_dict={'conv_size_list':[10,10,10],'kernel_size':(2,2), 'no_pool':False,'pool_size':(3,3), 'strides':1, 'learn_rate':0.001,
-                        'inner_dropout':0.1, 'outer_dropout':0.5,'dense_size':51,'final_activation':'sigmoid','double_conv':True}        
+        model_par_dict={'conv_size_list':[60,60],'kernel_size':(2,2), 'no_pool':False,'pool_size':(3,3), 'strides':1, 'learn_rate':0.001,
+                        'inner_dropout':None, 'outer_dropout':0.3,'dense_size':51,'final_activation':'sigmoid','double_conv':True}        
+    
     if name=='6': # Simple layered, with inner dropout
-        model_par_dict={'conv_size_list':[10,10,10],'kernel_size':(2,2), 'no_pool':False,'pool_size':(3,3), 'strides':1, 'learn_rate':0.001,
-                        'inner_dropout':0.1, 'outer_dropout':0.5,'dense_size':51,'final_activation':'sigmoid','double_conv':True}
+        model_par_dict={'conv_size_list':[80,80],'kernel_size':(4,4), 'no_pool':False,'pool_size':(3,3), 'strides':1, 'learn_rate':0.001,
+                        'inner_dropout':None, 'outer_dropout':0.3,'dense_size':51,'final_activation':'sigmoid','double_conv':True}
     if name=='7': # Simple layered, with inner dropout
         model_par_dict={'conv_size_list':[40,40,40],'kernel_size':(2,2), 'no_pool':False,'pool_size':(2,2), 'strides':1, 'learn_rate':0.001,
                         'inner_dropout':0.1, 'outer_dropout':0.5,'dense_size':51,'final_activation':'sigmoid','double_conv':True}        
     if name=='8': # Simple layered, with inner dropout
         model_par_dict={'conv_size_list':[60,60,60],'kernel_size':(2,2), 'no_pool':False,'pool_size':(2,2), 'strides':1, 'learn_rate':0.001,
                         'inner_dropout':0.1, 'outer_dropout':0.5,'dense_size':51,'final_activation':'sigmoid','double_conv':True}
-    
+    if name=='9': # Simple layered, with inner dropout
+        model_par_dict={'conv_size_list':[60,60],'kernel_size':(6,6), 'no_pool':False,'pool_size':(3,3), 'strides':1, 'learn_rate':0.001,
+                        'inner_dropout':None, 'outer_dropout':0.3,'dense_size':51,'final_activation':'sigmoid','double_conv':True}        
+    if name=='10': # Simple layered, with inner dropout
+        model_par_dict={'conv_size_list':[80,80],'kernel_size':(8,8), 'no_pool':False,'pool_size':(3,3), 'strides':1, 'learn_rate':0.001,
+                        'inner_dropout':0.5, 'outer_dropout':0.3,'dense_size':51,'final_activation':'sigmoid','double_conv':True}
+     
     ### Strides instead of pools        
     if name=='11': # Striding single conv
-        model_par_dict={'conv_size_list':[10,10,10],'kernel_size':(3,3), 'no_pool':True,'pool_size':(2,2), 'strides':[1,2,3,4], 'learn_rate':0.001,
-                        'inner_dropout':0.1, 'outer_dropout':0.5,'dense_size':51,'final_activation':'sigmoid','double_conv':False}     
+        model_par_dict={'conv_size_list':[20,20,20,20],'kernel_size':(3,3), 'no_pool':True,'pool_size':(2,2), 'strides':[1,2,3,2], 'learn_rate':0.001,
+                        'inner_dropout':None, 'outer_dropout':0.3,'dense_size':51,'final_activation':'sigmoid','double_conv':False}     
     if name=='12': # Striding single conv
-        model_par_dict={'conv_size_list':[10,10,10],'kernel_size':(3,3), 'no_pool':True,'pool_size':(2,2), 'strides':[1,2,3,4], 'learn_rate':0.001,
-                        'inner_dropout':0.1, 'outer_dropout':0.5,'dense_size':51,'final_activation':'sigmoid','double_conv':False}           
+        model_par_dict={'conv_size_list':[20,20,20,20],'kernel_size':(3,3), 'no_pool':True,'pool_size':(2,2), 'strides':[1,2,3,1], 'learn_rate':0.001,
+                        'inner_dropout':None, 'outer_dropout':0.3,'dense_size':51,'final_activation':'sigmoid','double_conv':False}           
     if name=='13': # Striding single conv
-        model_par_dict={'conv_size_list':[10,10,10],'kernel_size':(3,3), 'no_pool':True,'pool_size':(2,2), 'strides':[2,2,2,2], 'learn_rate':0.001,
-                        'inner_dropout':0.1, 'outer_dropout':0.5,'dense_size':51,'final_activation':'sigmoid','double_conv':True}     
+        model_par_dict={'conv_size_list':[40,40,40,40],'kernel_size':(3,3), 'no_pool':True,'pool_size':(2,2), 'strides':[3,2,2,1], 'learn_rate':0.001,
+                        'inner_dropout':0.1, 'outer_dropout':0.3,'dense_size':51,'final_activation':'sigmoid','double_conv':False}     
     if name=='14': # Striding single conv
-        model_par_dict={'conv_size_list':[10,10,10],'kernel_size':(3,3), 'no_pool':True,'pool_size':(2,2), 'strides':[3,3,3,3], 'learn_rate':0.001,
-                        'inner_dropout':0.1, 'outer_dropout':0.5,'dense_size':51,'final_activation':'sigmoid','double_conv':True} 
-        
-    elif name=='2': # Simple layered, without inner dropout
-        model_par_dict={'conv_size_list':[10,10,10],'kernel_size':(3,3),'pool_size':(2,2), 'strides':1, 'no_pool':False, 'learn_rate':0.001, 'outer_dropout':0.5,
-        'inner_dropout':None,'dense_size':64,'final_activation':'sigmoid','double_conv':False}
-
-
-    elif name=='0':  # Model used in ATLAS paper
+        model_par_dict={'conv_size_list':[30,40,30],'kernel_size':(3,3), 'no_pool':True,'pool_size':(2,2), 'strides':[3,2,1], 'learn_rate':0.001,
+                        'inner_dropout':0.1, 'outer_dropout':0.3,'dense_size':51,'final_activation':'sigmoid','double_conv':False} 
+    if name=='15': # Striding single conv
+        model_par_dict={'conv_size_list':[20,40,60],'kernel_size':(4,4), 'no_pool':True,'pool_size':(2,2), 'strides':[2,2,2], 'learn_rate':0.001,
+                        'inner_dropout':0.1, 'outer_dropout':0.3,'dense_size':51,'final_activation':'sigmoid','double_conv':False}     
+     
+    if name=='16': # Striding single conv
+        model_par_dict={'conv_size_list':[40,60,80],'kernel_size':(6,6), 'no_pool':True,'pool_size':(2,2), 'strides':[2,2,1], 'learn_rate':0.001,
+                        'inner_dropout':0.1, 'outer_dropout':0.3,'dense_size':51,'final_activation':'sigmoid','double_conv':False}           
+    if name=='17': # Striding single conv
+        model_par_dict={'conv_size_list':[40,40],'kernel_size':(2,2), 'no_pool':True,'pool_size':(2,2), 'strides':[2,2], 'learn_rate':0.001,
+                        'inner_dropout':None, 'outer_dropout':0.5,'dense_size':51,'final_activation':'sigmoid','double_conv':True}     
+    if name=='18': # Striding single conv
+        model_par_dict={'conv_size_list':[40,40],'kernel_size':(2,2), 'no_pool':True,'pool_size':(2,2), 'strides':[3,1], 'learn_rate':0.001,
+                        'inner_dropout':None, 'outer_dropout':0.5,'dense_size':51,'final_activation':'sigmoid','double_conv':True} 
+    if name=='19': # Striding single conv
+        model_par_dict={'conv_size_list':[80,80],'kernel_size':(2,2), 'no_pool':True,'pool_size':(2,2), 'strides':[2,1], 'learn_rate':0.001,
+                        'inner_dropout':0.5, 'outer_dropout':0.5,'dense_size':4,'final_activation':'sigmoid','double_conv':True}     
+    if name=='20': # Striding single conv
+        model_par_dict={'conv_size_list':[100,100],'kernel_size':(2,2), 'no_pool':True,'pool_size':(2,2), 'strides':[2,2], 'learn_rate':0.001,
+                        'inner_dropout':0.3, 'outer_dropout':0.5,'dense_size':4,'final_activation':'sigmoid','double_conv':True}     
+    
+    elif name=='0':
         custom_model=True
         learn_rate=0.001 
         
@@ -131,7 +152,7 @@ def f_define_model(config_dict,name='1'):
         h = Flatten()(h)
         h = Dense(512, activation='relu')(h)
         y = Dense(1, activation='sigmoid')(h)
-
+        
         # Ouptut layer
         outputs = layers.Dense(1, activation='sigmoid')(h)
        
@@ -141,14 +162,14 @@ def f_define_model(config_dict,name='1'):
         learn_rate=0.0005
         resnet=True
     
-    elif name=='101': # Resnet 50
+    elif name=='101': # Resnet 18
         inputs = layers.Input(shape=shape)
         model = ResNet18(img_input=inputs)
         learn_rate=0.0005
         resnet=True
 
     ### A custom layered cnn is name=0
-    elif name=='30': 
+    elif name=='30':
         custom_model=True
         learn_rate=0.001 
         inputs = layers.Input(shape=shape)
