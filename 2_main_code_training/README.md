@@ -12,6 +12,9 @@
 ## Running the submit script
 - Run models 1,2,3 on cori GPU
 ` sbatch gpu_cori_batch_script.sh 1\ 2\ 3 `
+For loop for 20 models 
+` for i in {1..20}; do echo $i ; sbatch gpu_cori_batch_script.sh $i; done `
+
 - Run models 1,2,3 on maeve GPU 
 ` sbatch gpu_maeve_batch_script.sh 0 1\ 2\ 3 `
 The first argument is the GPU number: 0,1 or 2

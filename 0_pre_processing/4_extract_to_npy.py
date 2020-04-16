@@ -33,7 +33,7 @@ def f_get_df():
     Function to get Dataframe and shuffle entries
     3 modes: 
     - full: Get a big dataframe, shuffling all entries
-    - split: Split dataframe into :srch,temp,diff and shuffle each and return list of 3 dataframes
+    - split: Split dataframe into :temp,srch,diff and shuffle each and return list of 3 dataframes
     '''
     
     data_dir='/global/project/projectdirs/dasrepo/vpa/supernova_cnn/data/gathered_data/'
@@ -165,7 +165,7 @@ if __name__=='__main__':
     ### Uncomment the line below if you want to run a slice of the dataset
     ###df=df.head(300000) ### make sure you take multiples of 3 so that all 3 files for each ID are taken
     
-    ### Get list of IDs. Each ID has a srch,temp,diff file
+    ### Get list of IDs. Each ID has a temp,srch,diff file
     idx_arr=np.unique(df.ID.values)
     #### Shuffle IDs
     np.random.seed(37)

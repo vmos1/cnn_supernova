@@ -26,7 +26,7 @@ from utils import dataset, cnn_model, f_get_data, f_load_config
 
 def parse_args():
     """Parse command line arguments."""
-    parser = argparse.ArgumentParser(description="Train and test CNN for ATLAS SUSY data", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    parser = argparse.ArgumentParser(description="Train and test CNN for Supernova data")
     add_arg = parser.add_argument
     
     add_arg('--config','-c', type=str, default='config.yaml',help='The .yaml file that stores the configuration.')
