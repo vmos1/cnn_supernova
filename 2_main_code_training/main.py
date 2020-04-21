@@ -32,7 +32,7 @@ def parse_args():
     add_arg('--config','-c', type=str, default='config.yaml',help='The .yaml file that stores the configuration.')
     add_arg('--train','-tr',  action='store_true' ,dest='train' ,help='Has the model been trained?')
     add_arg('-v', '--verbose', action='store_true')
-    add_arg('--gpu', type=str, choices=['None','maeve','cori'],default='None', help='Whether using gpu, if so, maeve or cori.')    
+    add_arg('--gpu', type=str, choices=['None','maeve','cori'], default='None', help='Whether using gpu, if so, maeve or cori.')    
     add_arg('--model_list', '-mdlst', nargs='+', type=int, dest='mod_lst',help=' Enter the list of model numbers to test ', required=True)
 
     return parser.parse_args()
@@ -44,6 +44,8 @@ if __name__=='__main__':
     print(args)
     ## Note: --train means models needs to be trained. hence train_status=False
     model_lst=args.mod_lst
+    pre_norm=True
+    if pre_norm : print("Prenormalization",pre_norm)
     
     ##### Stuff for GPU #####
     if args.gpu!='None': 
@@ -69,7 +71,7 @@ if __name__=='__main__':
     data_dir=config_dict['data']['data_dir']
     prefix=config_dict['data']['prefix']
     #### Read data from files 
-    data_dict=f_get_data(prefix,data_dir)
+    data_dict=f_get_data(prefix,data_dir,pre_norm=pre_norm)
     
     size_data=data_dict['labels'].shape[0]
     print("Size of entire dataset is : ",size_data)

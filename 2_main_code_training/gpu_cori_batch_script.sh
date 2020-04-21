@@ -6,7 +6,7 @@
 #SBATCH --job-name=supernova_cnn_train
 #SBATCH --output=slurm-%x-%j.out
 #SBATCH --constraint=gpu
-#SBATCH --account=nstaff
+#SBATCH --account=m3363
 #SBATCH --gres=gpu:1
 #################
 

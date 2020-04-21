@@ -45,13 +45,11 @@ def f_model_prototype(shape,**model_dict):
     
     for conv_size,strd in zip(conv_sizes,stride_lst):
         h = layers.Conv2D(conv_size, strides=strd, **conv_args)(h)
-        if model_dict['batch_norm'] in [1,3]:  
-            print("bnorm")
-            h = layers.BatchNormalization(epsilon=1e-5, momentum=0.99)(h)
+        h = layers.BatchNormalization(epsilon=1e-5, momentum=0.99)(h)
         
         if model_dict['double_conv']: 
             h = layers.Conv2D(conv_size,strides=strd, **conv_args)(h)
-            if model_dict['batch_norm'] in [1,3]:  h = layers.BatchNormalization(epsilon=1e-5, momentum=0.99)(h)
+            h = layers.BatchNormalization(epsilon=1e-5, momentum=0.99)(h)
         
         if not model_dict['no_pool']: h = layers.MaxPooling2D(pool_size=model_dict['pool_size'])(h)
         ## inner_dropout is None or a float
@@ -62,7 +60,7 @@ def f_model_prototype(shape,**model_dict):
     if model_dict['outer_dropout']!=None: h = layers.Dropout(rate=model_dict['outer_dropout'])(h)
     
     h = layers.Dense(model_dict['dense_size'], activation=activ)(h)
-    if model_dict['batch_norm'] in [2,3]:  h = layers.BatchNormalization(epsilon=1e-5, momentum=0.99)(h)
+    h = layers.BatchNormalization(epsilon=1e-5, momentum=0.99)(h)
     
     # Ouptut layer
     outputs = layers.Dense(1, activation=model_dict['final_activation'])(h)    
@@ -84,42 +82,36 @@ def f_define_model(config_dict,name='1'):
     # Choose model
     if name=='1': # Simple layered, with inner dropout
         model_par_dict={'conv_size_list':[80,80,80],'kernel_size':(3,3), 'no_pool':False,'pool_size':(2,2), 'strides':1, 'learn_rate':0.001,
-                        'inner_dropout':None, 'outer_dropout':0.3,'dense_size':51,'final_activation':'sigmoid','double_conv':False, 'batch_norm': 1}
+                        'inner_dropout':None, 'outer_dropout':0.3,'dense_size':51,'final_activation':'sigmoid','double_conv':False}
     if name=='2': # Simple layered, with inner dropout
         model_par_dict={'conv_size_list':[80,80,80],'kernel_size':(3,3), 'no_pool':False,'pool_size':(2,2), 'strides':1, 'learn_rate':0.001,
-                        'inner_dropout':None, 'outer_dropout':0.3,'dense_size':51,'final_activation':'sigmoid','double_conv':False, 'batch_norm': 2}
+                        'inner_dropout':None, 'outer_dropout':0.3,'dense_size':51,'final_activation':'sigmoid','double_conv':False}
     if name=='3': # Simple layered, with inner dropout
         model_par_dict={'conv_size_list':[80,80,80],'kernel_size':(3,3), 'no_pool':False,'pool_size':(2,2), 'strides':1, 'learn_rate':0.001,
-                        'inner_dropout':None, 'outer_dropout':0.3,'dense_size':51,'final_activation':'sigmoid','double_conv':False, 'batch_norm': 3}
+                        'inner_dropout':None, 'outer_dropout':0.3,'dense_size':51,'final_activation':'sigmoid','double_conv':False}
     if name=='4': # Simple layered, with inner dropout
         model_par_dict={'conv_size_list':[80,80,80],'kernel_size':(3,3), 'no_pool':False,'pool_size':(2,2), 'strides':1, 'learn_rate':0.001,
-                        'inner_dropout':None, 'outer_dropout':0.3,'dense_size':51,'final_activation':'sigmoid','double_conv':False, 'batch_norm': 0}
+                        'inner_dropout':None, 'outer_dropout':0.3,'dense_size':51,'final_activation':'sigmoid','double_conv':False}
         
     if name=='6': # Simple layered, with inner dropout
         model_par_dict={'conv_size_list':[80,80],'kernel_size':(4,4), 'no_pool':False,'pool_size':(3,3), 'strides':1, 'learn_rate':0.001,
-                        'inner_dropout':None, 'outer_dropout':0.3,'dense_size':51,'final_activation':'sigmoid','double_conv':True, 'batch_norm': 1}
+                        'inner_dropout':None, 'outer_dropout':0.3,'dense_size':51,'final_activation':'sigmoid','double_conv':True}
     if name=='7': # Simple layered, with inner dropout
         model_par_dict={'conv_size_list':[80,80],'kernel_size':(4,4), 'no_pool':False,'pool_size':(3,3), 'strides':1, 'learn_rate':0.001,
-                        'inner_dropout':None, 'outer_dropout':0.3,'dense_size':51,'final_activation':'sigmoid','double_conv':True, 'batch_norm': 2}
+                        'inner_dropout':None, 'outer_dropout':0.3,'dense_size':51,'final_activation':'sigmoid','double_conv':True}
     if name=='8': # Simple layered, with inner dropout
         model_par_dict={'conv_size_list':[80,80],'kernel_size':(4,4), 'no_pool':False,'pool_size':(3,3), 'strides':1, 'learn_rate':0.001,
-                        'inner_dropout':None, 'outer_dropout':0.3,'dense_size':51,'final_activation':'sigmoid','double_conv':True, 'batch_norm': 3}
+                        'inner_dropout':None, 'outer_dropout':0.3,'dense_size':51,'final_activation':'sigmoid','double_conv':True}
     if name=='9': # Simple layered, with inner dropout
         model_par_dict={'conv_size_list':[80,80],'kernel_size':(4,4), 'no_pool':False,'pool_size':(3,3), 'strides':1, 'learn_rate':0.001,
-                        'inner_dropout':None, 'outer_dropout':0.3,'dense_size':51,'final_activation':'sigmoid','double_conv':True, 'batch_norm': 0}
+                        'inner_dropout':None, 'outer_dropout':0.3,'dense_size':51,'final_activation':'sigmoid','double_conv':True}
     
     if name=='16': # Striding single conv
         model_par_dict={'conv_size_list':[40,60,80],'kernel_size':(6,6), 'no_pool':True,'pool_size':(2,2), 'strides':[2,2,1], 'learn_rate':0.001,
-                        'inner_dropout':0.1, 'outer_dropout':0.3,'dense_size':51,'final_activation':'sigmoid','double_conv':False, 'batch_norm': 1}           
+                        'inner_dropout':0.1, 'outer_dropout':0.3,'dense_size':51,'final_activation':'sigmoid','double_conv':False}        
     if name=='17': # Striding single conv
         model_par_dict={'conv_size_list':[40,60,80],'kernel_size':(6,6), 'no_pool':True,'pool_size':(2,2), 'strides':[2,2,1], 'learn_rate':0.001,
-                        'inner_dropout':0.1, 'outer_dropout':0.3,'dense_size':51,'final_activation':'sigmoid','double_conv':False, 'batch_norm': 2}          
-    if name=='18': # Striding single conv
-        model_par_dict={'conv_size_list':[40,60,80],'kernel_size':(6,6), 'no_pool':True,'pool_size':(2,2), 'strides':[2,2,1], 'learn_rate':0.001,
-                        'inner_dropout':0.1, 'outer_dropout':0.3,'dense_size':51,'final_activation':'sigmoid','double_conv':False, 'batch_norm': 3}              
-    if name=='19': # Striding single conv
-        model_par_dict={'conv_size_list':[40,60,80],'kernel_size':(6,6), 'no_pool':True,'pool_size':(2,2), 'strides':[2,2,1], 'learn_rate':0.001,
-                        'inner_dropout':0.1, 'outer_dropout':0.3,'dense_size':51,'final_activation':'sigmoid','double_conv':False, 'batch_norm': 0}              
+                        'inner_dropout':0.1, 'outer_dropout':0.3,'dense_size':51,'final_activation':'sigmoid','double_conv':False}          
     
     elif name=='0':
         custom_model=True
@@ -137,7 +129,53 @@ def f_define_model(config_dict,name='1'):
         
         # Ouptut layer
         outputs = layers.Dense(1, activation='sigmoid')(h)
-       
+        
+    elif name=='30':
+        custom_model=True
+        learn_rate=0.001 
+        
+        inputs = layers.Input(shape=shape)
+        h = inputs        
+        h = layers.Conv2D(80,kernel_size=(4, 4), strides=1, activation='relu', padding='same')(h)
+        h = layers.BatchNormalization(epsilon=1e-5, momentum=0.99)(h)
+        h = layers.Conv2D(160,kernel_size=(4, 4), strides=1, activation='relu', padding='same')(h)
+        h = layers.BatchNormalization(epsilon=1e-5, momentum=0.99)(h)
+        h = layers.MaxPooling2D(pool_size=(3,3))(h)
+        h = layers.Conv2D(240,kernel_size=(4, 4), strides=1, activation='relu', padding='same')(h)
+        h = layers.BatchNormalization(epsilon=1e-5, momentum=0.99)(h)
+        h = layers.Conv2D(320,kernel_size=(4, 4), strides=1, activation='relu', padding='same')(h)
+        h = layers.BatchNormalization(epsilon=1e-5, momentum=0.99)(h)
+        h = layers.MaxPooling2D(pool_size=(3,3))(h)
+        
+        h = layers.Flatten()(h)
+        h = layers.Dropout(rate=0.3)(h)
+        h = layers.Dense(51, activation='relu')(h)
+        h = layers.BatchNormalization(epsilon=1e-5, momentum=0.99)(h)
+
+        # Ouptut layer
+        outputs = layers.Dense(1, activation='sigmoid')(h)    
+    
+    elif name=='31':
+        custom_model=True
+        learn_rate=0.001 
+        inputs = layers.Input(shape=shape)
+        h = inputs
+        # Convolutional layers     
+        conv_sizes=[200,200]
+        conv_args = dict(kernel_size=(4, 4), activation='relu', padding='same')
+        for conv_size in conv_sizes:
+            h = layers.Conv2D(conv_size, **conv_args)(h)
+            h = layers.BatchNormalization(epsilon=1e-5, momentum=0.99)(h)
+            h = layers.Conv2D(conv_size, **conv_args)(h)
+            h = layers.BatchNormalization(epsilon=1e-5, momentum=0.99)(h)
+            h = layers.MaxPooling2D(pool_size=(3, 3))(h)
+        
+        h = layers.Flatten()(h)
+        h = layers.Dense(51, activation='relu')(h)
+        h = layers.BatchNormalization(epsilon=1e-5, momentum=0.99)(h)
+        h = layers.Dropout(rate=0.5)(h)
+        outputs = layers.Dense(1, activation='sigmoid')(h)
+        
     elif name=='100': # Resnet 50
         inputs = layers.Input(shape=shape)
         model = ResNet50(img_input=inputs)
@@ -149,29 +187,6 @@ def f_define_model(config_dict,name='1'):
         model = ResNet18(img_input=inputs)
         learn_rate=0.0005
         resnet=True
-
-    ### A custom layered cnn is name=0
-    elif name=='30':
-        custom_model=True
-        learn_rate=0.001 
-        inputs = layers.Input(shape=shape)
-        h = inputs
-        # Convolutional layers     
-        conv_sizes=[51,102,204]
-        conv_args = dict(kernel_size=(4, 4), activation='relu', padding='same')
-        for conv_size in conv_sizes:
-            h = layers.Conv2D(conv_size, **conv_args)(h)
-            h = layers.Conv2D(conv_size, **conv_args)(h)
-            h = layers.MaxPooling2D(pool_size=(2, 2))(h)
-            #h = layers.Dropout(rate=0.5)(h)
-
-        h = layers.Flatten()(h)
-        # Fully connected  layers
-        h = layers.Dense(51, activation='relu')(h)
-        h = layers.Dropout(rate=0.5)(h)
-
-        # Ouptut layer
-        outputs = layers.Dense(1, activation='sigmoid')(h)
     
     ############################################
     ### Add more models above

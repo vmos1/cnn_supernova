@@ -15,19 +15,22 @@ def f_load_config(config_file):
         config = yaml.load(f, Loader=yaml.SafeLoader)
     return config
 
-def f_get_data(prefix,data_dir):
+def f_get_data(prefix,data_dir,pre_norm):
     '''
     Function to get data from .npy files into images, labels and IDs.
     '''
+    
+    img_name=data_dir+'prenorm_%s_x.npy'%(prefix) if pre_norm else data_dir+prefix+'_x.npy'
+    print(img_name)
     try:
-        images=np.load(data_dir+prefix+'_x.npy')
+        images=np.load(img_name)
         labels=np.load(data_dir+prefix+'_y.npy')
         ids=np.load(data_dir+prefix+'_idx.npy')
     except Exception as e:
         print("Encountered exception",e)
         raise SystemExit
 
-    keys=['images','labels','ids']
+    keys=['images','labels','ids']        
     values_dict=dict(zip(keys,[images,labels,ids]))
     
     return values_dict
