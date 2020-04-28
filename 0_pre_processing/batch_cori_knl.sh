@@ -6,7 +6,7 @@
 #SBATCH --job-name=supernova_extract_data_knl
 #SBATCH --output=slurm-%x-%j.out
 #SBATCH --constraint=knl
-#SBATCH --account=nstaff
+#SBATCH --account=m3363
 #################
 
 echo "--start date" `date` `date +%s`

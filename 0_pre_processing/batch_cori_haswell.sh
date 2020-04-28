@@ -6,7 +6,7 @@
 #SBATCH --job-name=supernova_extract_data_haswell
 #SBATCH --output=slurm-%x-%j.out
 #SBATCH --constraint=haswell
-#SBATCH --account=nstaff
+#SBATCH --account=m3363
 #################
 
 echo "--start date" `date` `date +%s`

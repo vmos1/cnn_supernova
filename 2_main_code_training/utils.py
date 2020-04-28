@@ -68,20 +68,32 @@ class cnn_model:
         self.fname_ypred=model_save_dir+'ypred_{0}.test'.format(model_name)
         self.fname_ytest=model_save_dir+'ytest_{0}.test'.format(model_name)
         
-
     def f_build_model(self,model):
         '''Store model in the class member. Reads in a keras model   '''
         self.cnn_model=model
         
+
+    
     def f_train_model(self,train_data,val_data,num_epochs=5,batch_size=64):
 #         model,inpx,inpy,model_weights):
         '''
         Train model. Returns just history.history
         '''
+    
+        def f_learnrate_sch(epoch,lr):
+            ''' Module to schedule the learn rate'''
+            step=10 ### learn rate is constant up to here
+            #if epoch>step: lr=lr*np.exp(-0.2*(epoch-10)) # Exponential decay after 10
+            if (epoch>=step and epoch<=30): lr=0.0001
+            if epoch>30: lr=0.00001
+            return lr 
+    
         ###callbacks_list=[]
-        callbacks_lst=[callbacks.EarlyStopping(monitor='val_loss', patience=40, verbose=1)]
+        callbacks_lst=[callbacks.EarlyStopping(monitor='val_loss', patience=30, verbose=1)]
+        #callbacks_lst.append(callbacks.ModelCheckpoint(self.fname_model_wts, save_best_only=True, monitor='val_loss', mode='min'))
         callbacks_lst.append(callbacks.ModelCheckpoint(self.fname_model_wts, save_best_only=True, monitor='val_loss', mode='min'))
-        
+        callbacks_lst.append(callbacks.LearningRateScheduler(f_learnrate_sch,verbose=1))
+         
         model=self.cnn_model
         history=model.fit(x=train_data.x, y=train_data.y,
                         batch_size=batch_size,
@@ -91,7 +103,7 @@ class cnn_model:
                         #validation_split=cv_fraction,
                         validation_data=(val_data.x,val_data.y),
                         shuffle=True)
-
+        
         print("Number of parameters",model.count_params())
 
         self.history=history.history       

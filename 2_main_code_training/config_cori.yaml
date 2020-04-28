@@ -13,7 +13,7 @@ model:
 
 optimizer:
         #name: Adam
-        lr: 0.001
+        lr: 0.0005
 
 training:
     batch_size: 64
