@@ -21,7 +21,7 @@ def f_get_data(prefix,data_dir,pre_norm):
     '''
     
     img_name=data_dir+'prenorm_%s_x.npy'%(prefix) if pre_norm else data_dir+prefix+'_x.npy'
-    print(img_name)
+    print("Input file name",img_name)
     try:
         images=np.load(img_name)
         labels=np.load(data_dir+prefix+'_y.npy')
@@ -84,8 +84,8 @@ class cnn_model:
             ''' Module to schedule the learn rate'''
             step=10 ### learn rate is constant up to here
             #if epoch>step: lr=lr*np.exp(-0.2*(epoch-10)) # Exponential decay after 10
-            if (epoch>=step and epoch<=30): lr=0.0001
-            if epoch>30: lr=0.00001
+            if (epoch>=step and epoch%step==0): lr=lr/2.0
+             
             return lr 
     
         ###callbacks_list=[]

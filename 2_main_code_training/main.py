@@ -44,7 +44,7 @@ if __name__=='__main__':
     print(args)
     ## Note: --train means models needs to be trained. hence train_status=False
     model_lst=args.mod_lst
-    pre_norm=False
+    pre_norm=True
     if pre_norm : print("Prenormalization",pre_norm)
     
     ##### Stuff for GPU #####
