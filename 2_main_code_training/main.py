@@ -44,7 +44,7 @@ if __name__=='__main__':
     print(args)
     ## Note: --train means models needs to be trained. hence train_status=False
     model_lst=args.mod_lst
-    pre_norm=True
+    pre_norm=False
     if pre_norm : print("Prenormalization",pre_norm)
     
     ##### Stuff for GPU #####
@@ -76,7 +76,7 @@ if __name__=='__main__':
     size_data=data_dict['labels'].shape[0]
     print("Size of entire dataset is : ",size_data)
     #### Define the indices for training, validation and test data
-    train_idx=int(0.3*size_data)
+    train_idx=int(0.7*size_data)
     val_idx=train_idx+int(0.05*size_data)
     test_idx=val_idx+int(0.05*size_data)
     

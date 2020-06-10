@@ -88,9 +88,8 @@ class cnn_model:
              
             return lr 
     
-        ###callbacks_list=[]
-        callbacks_lst=[callbacks.EarlyStopping(monitor='val_loss', patience=30, verbose=1)]
-        #callbacks_lst.append(callbacks.ModelCheckpoint(self.fname_model_wts, save_best_only=True, monitor='val_loss', mode='min'))
+        callbacks_lst=[]
+        callbacks_lst.append(callbacks.EarlyStopping(monitor='val_loss', patience=15, verbose=1))
         callbacks_lst.append(callbacks.ModelCheckpoint(self.fname_model_wts, save_best_only=True, monitor='val_loss', mode='min'))
         callbacks_lst.append(callbacks.LearningRateScheduler(f_learnrate_sch,verbose=1))
          

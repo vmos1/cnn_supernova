@@ -84,7 +84,7 @@ def f_define_model(config_dict,name='1'):
     if name=='3': # Simple layered, with inner dropout
         model_par_dict={'conv_size_list':[80,80,80],'kernel_size':(3,3), 'no_pool':False,'pool_size':(2,2), 'strides':1, 'learn_rate':0.00002,
                         'inner_dropout':None, 'outer_dropout':0.3,'dense_size':51,'final_activation':'sigmoid','double_conv':False}
-    
+        
     if name=='8': # Simple layered, with inner dropout
         model_par_dict={'conv_size_list':[80,80],'kernel_size':(4,4), 'no_pool':False,'pool_size':(3,3), 'strides':1, 'learn_rate':0.00002,
                         'inner_dropout':None, 'outer_dropout':0.3,'dense_size':51,'final_activation':'sigmoid','double_conv':True}
