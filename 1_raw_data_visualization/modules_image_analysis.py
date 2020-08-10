@@ -21,31 +21,32 @@ from scipy import fftpack
 # In[2]:
 
 
-def f_plot_grid(arr,cols=16):
-    
-    size=arr.shape[0]
-    assert cols<=size, "cols %s greater than array size %s"%(cols,size)
-    
+def f_plot_grid(arr,cols=16,fig_size=(12,12)):
+    ''' Plot a grid of images
+    '''
+    size=arr.shape[0]    
     rows=int(np.ceil(size/cols))
-#     print(rows,cols)
-    
-    fig,axarr=plt.subplots(rows,cols,figsize=(8,8),constrained_layout=True)
-    for i in range(rows*cols):
+    print(rows,cols)
+
+    fig,axarr=plt.subplots(rows,cols,figsize=fig_size,constrained_layout=True)
+    if rows==1: axarr=np.reshape(axarr,(rows,cols))
+    if cols==1: axarr=np.reshape(axarr,(rows,cols))
+    for i in range(min(rows*cols,size)):
         row,col=int(i/cols),i%cols
-#         print(i,'\t',row,col)
         try: 
-            axarr[row,col].imshow(arr[i])
-    #         axarr[row,col].imshow(arr[i],origin='lower',interpolation='nearest',cmap='cool', extent = [0, 128, 0, 128])
-    #         fig.subplots_adjust(left=0.01,bottom=0.01,right=0.1,top=0.1,wspace=0.001,hspace=0.0001)
+#             axarr[row,col].imshow(arr[i])
+            axarr[row,col].imshow(arr[i],origin='lower',interpolation='nearest',cmap='cool', extent = [0, 128, 0, 128])
+#             fig.subplots_adjust(left=0.01,bottom=0.01,right=0.1,top=0.1,wspace=0.001,hspace=0.0001)
     #         fig.tight_layout()
         # Drop axis label
-        except: 
+        except Exception as e:
+            print('Exception:',e)
             pass
         temp=plt.setp([a.get_xticklabels() for a in axarr[:-1,:].flatten()], visible=False)
         temp=plt.setp([a.get_yticklabels() for a in axarr[:,1:].flatten()], visible=False)
 
 
-def f_plot_intensity_grid(arr,cols=5):
+def f_plot_intensity_grid(arr,cols=5,fig_size=(12,12)):
     '''
     Module to plot the pixel intensity histograms for a set of images on a gird
     '''
@@ -58,7 +59,7 @@ def f_plot_intensity_grid(arr,cols=5):
 
 
 #     print("Plotting %s images" %(rows*cols))
-    fig,axarr=plt.subplots(rows,cols,figsize=(8,8),constrained_layout=True)
+    fig,axarr=plt.subplots(rows,cols,figsize=fig_size,constrained_layout=True)
     for i in range(rows*cols):
         row,col=int(i/cols),i%cols
         ### Get histogram
@@ -71,7 +72,6 @@ def f_plot_intensity_grid(arr,cols=5):
 #         fig.subplots_adjust(left=0.01,bottom=0.01,right=0.1,top=0.1,wspace=0.001,hspace=0.0001)
         except Exception as e:
             print('error',e)
-
 
 def f_pixel_intensity(img_arr,bins=25,label='validation',mode='avg',normalize=False,log_scale=True,plot=True):
     '''

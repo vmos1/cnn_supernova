@@ -48,7 +48,7 @@ class dataset:
     def __init__(self,name,data_dict,start_idx,end_idx,):
         self.name=name
 
-        self.x,self.y,self.id=data_dict['images'][start_idx:end_idx],data_dict['labels'][start_idx:end_idx],data_dict['labels'][start_idx:end_idx]
+        self.x,self.y,self.id=data_dict['images'][start_idx:end_idx],data_dict['labels'][start_idx:end_idx],data_dict['ids'][start_idx:end_idx]
 
 
         
@@ -66,6 +66,7 @@ class cnn_model:
         self.fname_model_wts=model_save_dir+'model_wts_{0}.h5'.format(model_name)
         self.fname_history=model_save_dir+'history_{0}.pickle'.format(model_name)
         self.fname_ypred=model_save_dir+'ypred_{0}.test'.format(model_name)
+        self.fname_id_test=model_save_dir+'id_test_{0}.test'.format(model_name)
         self.fname_ytest=model_save_dir+'ytest_{0}.test'.format(model_name)
         
     def f_build_model(self,model):
@@ -154,7 +155,8 @@ class cnn_model:
         ## Save the test data labels for roc curve 
         ### This is just the test data, but it is useful to save it, to make the analysis part simpler
         np.savetxt(self.fname_ytest,test_data.y)
-            
+        ### Save IDs of test data for reverse analysis
+        np.savetxt(self.fname_id_test,test_data.id)
         
 class trained_model:
     '''

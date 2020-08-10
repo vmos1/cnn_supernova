@@ -1,4 +1,4 @@
-# The main code for training a CNN on the DESS Supernova images.
+# The main code for training a CNN on the DES Supernova images.
 ### Created by Venkitesh Ayyar (vpa@lbl.gov)
 ### March 7, 2020 
 
@@ -76,7 +76,7 @@ if __name__=='__main__':
     size_data=data_dict['labels'].shape[0]
     print("Size of entire dataset is : ",size_data)
     #### Define the indices for training, validation and test data
-    train_idx=int(0.7*size_data)
+    train_idx=int(0.5*size_data)
     val_idx=train_idx+int(0.05*size_data)
     test_idx=val_idx+int(0.05*size_data)
     

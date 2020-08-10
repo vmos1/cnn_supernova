@@ -169,7 +169,7 @@ if __name__=='__main__':
     idx_arr=np.unique(df.ID.values)
     #### Shuffle IDs
     np.random.seed(37)
-    np.random.shuffle(idx_arr) 
+    np.random.shuffle(idx_arr)
     np.save(save_location+'initial_idx_arr.npy',idx_arr)  ### Save the ID file for final comparison
     
     t2=time.time()
