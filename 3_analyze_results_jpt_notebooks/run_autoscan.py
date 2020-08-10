@@ -16,7 +16,7 @@ FEATS = ['gflux', 'diffsumrn', 'numnegrn', 'mag',
          'gauss', 'scale', 'amp', 'colmeds', 'maskfrac',
          'l1']
 
-FEATS=['AMP', 'A_IMAGE', 'A_REF','BAND', 'B_IMAGE', 'B_REF', 'CCDID', 'COLMEDS', 
+FEATS=['AMP', 'A_IMAGE', 'A_REF', 'B_IMAGE', 'B_REF', 'CCDID', 'COLMEDS', 
  'DIFFSUMRN', 'ELLIPTICITY', 'FLAGS', 'FLUX_RATIO', 
  'GAUSS', 'GFLUX', 'L1', 'LACOSMIC', 'MAG', 'MAGDIFF', 'MAGLIM', 
  'MAG_FROM_LIMIT', 'MAG_REF', 'MAG_REF_ERR', 'MASKFRAC', 
@@ -47,7 +47,6 @@ if __name__ == '__main__':
     numbers = features['ID']
     features = features[FEATS]
 
-    print(type(imputer))
     imputed = imputer.transform(features)
     scaled = scaler.transform(imputed)
 
