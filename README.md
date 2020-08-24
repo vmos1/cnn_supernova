@@ -1,16 +1,15 @@
 Jan 24, 2020
 # Introduction
-This repository contains codes used to train 2D layered CNNs for performing classification on supernova data.
+This repository contains codes used to train 2D layered CNNs for performing classification on supernova data (Artifact vs non-artifact).
 
 Tools for use for other datasets:
-1. Data visulizaiton
+1. Data visualization
 2. Training CNN
 3. Viewing model results: learning curves and predictions
 
 # Dataset
 The data can be found https://portal.nersc.gov/project/dessn/autoscan/
 For further information refer: https://arxiv.org/abs/1504.02936v3
-
 
 
 # Important file locations:
