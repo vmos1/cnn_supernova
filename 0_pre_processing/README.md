@@ -6,9 +6,9 @@ Steps:
 1. **Download data**
 From the website https://portal.nersc.gov/project/dessn/autoscan/
 
-    a. Download the data using the file `0_download_data.py`
+    a. Download the raw data (.gif files) using the file `0_download_data.py`
     
-    b. Download the file autoscan_features.3.csv 
+    b. Download the file `autoscan_features.3.csv` which contains the summary information. 
     
 2. **Gather file paths** Use `1_preprocessing.py` to write gathered file paths as a csv (gathered_filepaths.csv)
 3. **Add labels** Add the labels and write it to a file (summary_label_files.csv)
