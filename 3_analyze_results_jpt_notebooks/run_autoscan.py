@@ -3,8 +3,13 @@ import sys
 import pickle
 import joblib
 import pandas as pd
+import numpy as np
 
-FEATS = ['gflux', 'diffsumrn', 'numnegrn', 'mag',
+
+if __name__ == '__main__':
+
+    ## Features. The columns are to be given to the code in this order !!
+    FEATS = ['gflux', 'diffsumrn', 'numnegrn', 'mag',
          'a_image', 'b_image', 'flags', 'mag_ref',
          'mag_ref_err', 'a_ref', 'b_ref', 'bandnum',
          'n2sig3', 'n3sig3', 'n2sig5', 'n3sig5',
@@ -15,22 +20,7 @@ FEATS = ['gflux', 'diffsumrn', 'numnegrn', 'mag',
          'spreaderr_model', 'flux_ratio', 'lacosmic',
          'gauss', 'scale', 'amp', 'colmeds', 'maskfrac',
          'l1']
-
-FEATS=['AMP', 'A_IMAGE', 'A_REF', 'B_IMAGE', 'B_REF', 'CCDID', 'COLMEDS', 
- 'DIFFSUMRN', 'ELLIPTICITY', 'FLAGS', 'FLUX_RATIO', 
- 'GAUSS', 'GFLUX', 'L1', 'LACOSMIC', 'MAG', 'MAGDIFF', 'MAGLIM', 
- 'MAG_FROM_LIMIT', 'MAG_REF', 'MAG_REF_ERR', 'MASKFRAC', 
- 'MIN_DISTANCE_TO_EDGE_IN_NEW', 'N2SIG3', 'N2SIG3SHIFT', 
- 'N2SIG5', 'N2SIG5SHIFT', 'N3SIG3', 'N3SIG3SHIFT', 
- 'N3SIG5', 'N3SIG5SHIFT', 'NN_DIST_RENORM', 'NUMNEGRN', 
- 'SCALE',  'SNR', 'SPREADERR_MODEL', 'SPREAD_MODEL']
-
-
-if __name__ == '__main__':
-
-#     classifier_path = os.getenv('ML_CLASSIFIER')
-#     imputer_path = os.getenv('ML_IMPUTER')
-#     scaler_path = os.getenv('ML_SCALER')
+    
     
     classifier_path = '/global/cfs/cdirs/dasrepo/vpa/supernova_cnn/data/autoscan_data/data/ml3.2.classifier/ml3.2.comp'
     imputer_path = '/global/cfs/cdirs/dasrepo/vpa/supernova_cnn/data/autoscan_data/data/imputerml3.2.obj'
@@ -43,15 +33,28 @@ if __name__ == '__main__':
     # load in the features
     print(sys.argv[1])
     features = pd.read_csv(sys.argv[1],sep=',',comment='#')
-
-    numbers = features['ID']
-    features = features[FEATS]
-
+    features = features.rename(columns={'BAND':'BANDNUM'})
+    
+    run_ids = features['ID']
+    ### Need to use the column names in order given in FEATS above. Input df has columns in Caps.
+    col_list=[strg.upper() for strg in FEATS]
+    features = features[col_list]
+    
+    print(features.columns)
+    
+    ### Convert BAND to integers
+    bm = {'g':0, 'r':1, 'i':2, 'z':3}
+    features['BANDNUM']=np.array([bm[i] for i in features.BANDNUM.values])
+    
     imputed = imputer.transform(features)
     scaled = scaler.transform(imputed)
 
     clf.n_jobs = 1
     probs = clf.predict_proba(scaled)[:, 1]
-    df = pd.DataFrame({'number': numbers, 'score': probs})
-    outfile_name = sys.argv[1].replace('.features.csv', '.scored.csv')
+    df = pd.DataFrame({'run_id': run_ids, 'score': probs})
+    
+    ## Save results to .csv file
+    save_dir='/global/cfs/cdirs/dasrepo/vpa/supernova_cnn/data/autoscan_data/results/'
+    outfile_name=save_dir+'random-forest_scores.csv'
+    print(outfile_name)
     df.to_csv(outfile_name, index=False)

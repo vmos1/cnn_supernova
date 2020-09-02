@@ -39,5 +39,6 @@ if __name__ == '__main__':
     clf.n_jobs = 1
     probs = clf.predict_proba(scaled)[:, 1]
     df = pd.DataFrame({'number': numbers, 'score': probs})
-    outfile_name = sys.argv[1].replace('.features.csv', '.scored.csv')
+    ## the line below is dangerous. it can accidentally modify source file. don't run!!
+#     outfile_name = sys.argv[1].replace('.features.csv', '.scored.csv')
     df.to_csv(outfile_name, index=False)
