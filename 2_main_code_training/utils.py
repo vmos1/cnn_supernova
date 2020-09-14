@@ -45,13 +45,12 @@ class dataset:
     
     '''
     ## Eg: dataset('train',data_dir)
-    def __init__(self,name,data_dict,start_idx,end_idx,):
+    def __init__(self,name,data_dict,idx_arr):
         self.name=name
 
-        self.x,self.y,self.id=data_dict['images'][start_idx:end_idx],data_dict['labels'][start_idx:end_idx],data_dict['ids'][start_idx:end_idx]
+        self.x,self.y,self.id=data_dict['images'][idx_arr],data_dict['labels'][idx_arr],data_dict['ids'][idx_arr]
 
 
-        
 class cnn_model:
     '''
     Class to store features of cnn model such as : model_name, wts_filename, history_filename,
@@ -67,6 +66,8 @@ class cnn_model:
         self.fname_history=model_save_dir+'history_{0}.pickle'.format(model_name)
         self.fname_ypred=model_save_dir+'ypred_{0}.test'.format(model_name)
         self.fname_id_test=model_save_dir+'id_test_{0}.test'.format(model_name)
+        self.fname_id_train=model_save_dir+'id_train_{0}.train'.format(model_name)
+        self.fname_id_val=model_save_dir+'id_val_{0}.val'.format(model_name)
         self.fname_ytest=model_save_dir+'ytest_{0}.test'.format(model_name)
         
     def f_build_model(self,model):
@@ -146,18 +147,22 @@ class cnn_model:
         ### Store predictions to the class object
         self.y_pred=y_pred
     
-    def f_save_predictions(self,test_data):
-        ''' Save predictions for test data and the actual test data labels'''
+    def f_save_predictions(self,test_data,train_data,val_data):
+        ''' Save predictions for test data and the actual test data labels
+            Also save IDs of train and validation data'''
         
         ## Save the predictions on test data for the labels, for roc curve
         np.savetxt(self.fname_ypred,self.y_pred)
         
-        ## Save the test data labels for roc curve 
+        ## Save the test data labels and IDs for roc curve 
         ### This is just the test data, but it is useful to save it, to make the analysis part simpler
         np.savetxt(self.fname_ytest,test_data.y)
-        ### Save IDs of test data for reverse analysis
+        ### Save IDs of test, train and validation data for reverse analysis
         np.savetxt(self.fname_id_test,test_data.id)
-        
+        np.savetxt(self.fname_id_train,train_data.id)
+        np.savetxt(self.fname_id_val,val_data.id)
+
+
 class trained_model:
     '''
     Class to extract data of trained model

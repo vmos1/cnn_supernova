@@ -76,20 +76,29 @@ if __name__=='__main__':
     size_data=data_dict['labels'].shape[0]
     print("Size of entire dataset is : ",size_data)
     #### Define the indices for training, validation and test data
-    train_idx=int(0.5*size_data)
-    val_idx=train_idx+int(0.05*size_data)
-    test_idx=val_idx+int(0.05*size_data)
+    train_size,val_size,test_size=int(0.5*size_data),int(0.05*size_data),int(0.05*size_data)
+    
+    ### Get random indices for test,train,val
+    np.random.seed(225) # Set random seed
+    test_idx=np.random.choice(np.arange(size_data),test_size,replace=False)
+    # get remaining indices without test indices
+    rem_idx1=np.array(list(set(np.arange(size_data))-set(test_idx)))
+    val_idx=np.random.choice(rem_idx1,val_size,replace=False)
+    rem_idx2=np.array(list(set(rem_idx1)-set(val_idx)))
+    train_idx=np.random.choice(rem_idx2,train_size,replace=False)
+    
+    print("Shapes of indices",train_idx.shape,test_idx.shape,val_idx.shape)
     
     #### Storing arrays into train,validation, test objects and deleting the full data dictionary
-    train_data=dataset('training',data_dict,start_idx=0,end_idx=train_idx)
-    val_data=dataset('validation',data_dict,start_idx=train_idx,end_idx=val_idx)
-    test_data=dataset('test',data_dict,start_idx=val_idx,end_idx=test_idx)
+    train_data=dataset('training',data_dict,train_idx)
+    val_data=dataset('validation',data_dict,val_idx)
+    test_data=dataset('test',data_dict,test_idx)
     del data_dict
 
     print("\nData shapes: Train {0}, Validation {1}, Test {2}\n".format(train_data.x.shape,val_data.x.shape,test_data.x.shape))
     
     t2=time.time()
-    print("Time taken to read files",t2-t1)
+    print("Time taken to read and process input files",t2-t1)
      
     #### ML part ####
     
@@ -119,6 +128,6 @@ if __name__=='__main__':
         ### Test model ###
         Model.f_test_model(test_data)
         
-        ### Save prediction array and labels array
-        Model.f_save_predictions(test_data)
+        ### Save prediction array and labels of test,train and val data
+        Model.f_save_predictions(test_data,train_data,val_data)
         
