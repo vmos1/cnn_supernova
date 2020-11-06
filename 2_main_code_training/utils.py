@@ -42,8 +42,12 @@ def f_get_data(prefix,data_dir,pre_norm):
 class dataset:
     '''
     Class to store datasets. Example objects: train_data,val_data,test_data
-    
+    3 arguments : 
+    - Name of dataset
+    - dictionary containing x,y,ids
+    - Index array to select specific rows
     '''
+    
     ## Eg: dataset('train',data_dir)
     def __init__(self,name,data_dict,idx_arr):
         self.name=name

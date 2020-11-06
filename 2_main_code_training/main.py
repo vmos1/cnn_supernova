@@ -76,10 +76,11 @@ if __name__=='__main__':
     size_data=data_dict['labels'].shape[0]
     print("Size of entire dataset is : ",size_data)
     #### Define the indices for training, validation and test data
-    train_size,val_size,test_size=int(0.5*size_data),int(0.05*size_data),int(0.05*size_data)
+    train_size,val_size,test_size=int(0.7*size_data),int(0.1*size_data),int(0.2*size_data)
     
     ### Get random indices for test,train,val
-    np.random.seed(225) # Set random seed
+#     np.random.seed(225) # Set random seed
+    np.random.seed(737581) # Set random seed
     test_idx=np.random.choice(np.arange(size_data),test_size,replace=False)
     # get remaining indices without test indices
     rem_idx1=np.array(list(set(np.arange(size_data))-set(test_idx)))

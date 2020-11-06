@@ -1,7 +1,7 @@
 #!/bin/bash
 #################
 #SBATCH --nodes=1
-#SBATCH --time=01:00:00
+#SBATCH --time=02:00:00
 #SBATCH --qos=regular
 #SBATCH --job-name=supernova_cnn_train
 #SBATCH --output=slurm-%x-%j.out

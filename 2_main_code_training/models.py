@@ -80,114 +80,18 @@ def f_define_model(config_dict,name='1'):
     custom_model=False ### Variable storing whether the models is a layer-by-layer build code (not using the protytype function).    
     
     # Choose model
-    if name=='3': # Simple layered, with inner dropout
+    if name=='1': # Simple layered, with inner dropout
         model_par_dict={'conv_size_list':[80,80,80],'kernel_size':(3,3), 'no_pool':False,'pool_size':(2,2), 'strides':1, 'learn_rate':0.00002,
                         'inner_dropout':None, 'outer_dropout':0.3,'dense_size':51,'final_activation':'sigmoid','double_conv':False}
-    if name=='4': # Simple layered, with inner dropout
-        model_par_dict={'conv_size_list':[120,120,120],'kernel_size':(3,3), 'no_pool':False,'pool_size':(2,2), 'strides':1, 'learn_rate':0.00002,
-                        'inner_dropout':None, 'outer_dropout':0.3,'dense_size':51,'final_activation':'sigmoid','double_conv':False}    
-    
-    if name=='8': # Simple layered, with inner dropout
+    if name=='2': # Simple layered, with inner dropout
         model_par_dict={'conv_size_list':[80,80],'kernel_size':(4,4), 'no_pool':False,'pool_size':(3,3), 'strides':1, 'learn_rate':0.00002,
                         'inner_dropout':None, 'outer_dropout':0.3,'dense_size':51,'final_activation':'sigmoid','double_conv':True}
-    if name=='9': # Simple layered, with inner dropout
+    if name=='3': # Simple layered, with inner dropout
         model_par_dict={'conv_size_list':[120,120],'kernel_size':(4,4), 'no_pool':False,'pool_size':(3,3), 'strides':1, 'learn_rate':0.00002,
-                        'inner_dropout':None, 'outer_dropout':0.3,'dense_size':51,'final_activation':'sigmoid','double_conv':True}
-        
-    if name=='15': # Striding single conv
-        model_par_dict={'conv_size_list':[80,100,120],'kernel_size':(6,6), 'no_pool':True,'pool_size':(2,2), 'strides':[2,2,1], 'learn_rate':0.00002,
-                        'inner_dropout':0.1, 'outer_dropout':0.3,'dense_size':51,'final_activation':'sigmoid','double_conv':False}        
-    if name=='16': # Striding single conv
+                        'inner_dropout':None, 'outer_dropout':0.3,'dense_size':51,'final_activation':'sigmoid','double_conv':True}   
+    if name=='4': # Striding single conv
         model_par_dict={'conv_size_list':[40,60,80],'kernel_size':(6,6), 'no_pool':True,'pool_size':(2,2), 'strides':[2,2,1], 'learn_rate':0.00002,
-                        'inner_dropout':0.1, 'outer_dropout':0.3,'dense_size':51,'final_activation':'sigmoid','double_conv':False}        
-     
-    if name=='17': # Simple layered, with inner dropout
-        model_par_dict={'conv_size_list':[400,400,400,400],'kernel_size':(4,4), 'no_pool':False,'pool_size':(2,2), 'strides':1, 'learn_rate':0.000002,
-                        'inner_dropout':None, 'outer_dropout':0.5,'dense_size':40,'final_activation':'sigmoid','double_conv':False}
-    if name=='18': # Simple layered, with inner dropout
-        model_par_dict={'conv_size_list':[160,200,240,320],'kernel_size':(4,4), 'no_pool':False,'pool_size':(2,2), 'strides':1, 'learn_rate':0.000002,
-                        'inner_dropout':None, 'outer_dropout':0.3,'dense_size':10,'final_activation':'sigmoid','double_conv':False}
-    if name=='19': # Simple layered, with inner dropout
-        model_par_dict={'conv_size_list':[160,320],'kernel_size':(4,4), 'no_pool':False,'pool_size':(3,3), 'strides':1, 'learn_rate':0.000002,
-                        'inner_dropout':None, 'outer_dropout':0.3,'dense_size':10,'final_activation':'sigmoid','double_conv':True}
-    if name=='20': # Simple layered, with inner dropout
-        model_par_dict={'conv_size_list':[200,320],'kernel_size':(4,4), 'no_pool':False,'pool_size':(3,3), 'strides':1, 'learn_rate':0.000002,
-                        'inner_dropout':None, 'outer_dropout':0.3,'dense_size':40,'final_activation':'sigmoid','double_conv':True}
-       
-    elif name=='0':
-        custom_model=True
-        learn_rate=0.001 
-        
-        inputs = layers.Input(shape=shape)
-        h = inputs
-        # Convolutional layers
-        h = Conv2D(64, kernel_size=(3, 3), activation='relu', strides=1, padding='same')(h)
-        h = Conv2D(128, kernel_size=(3, 3), activation='relu', strides=2, padding='same')(h)
-        h = Conv2D(256, kernel_size=(3, 3), activation='relu', strides=1, padding='same')(h)
-        h = Conv2D(256, kernel_size=(3, 3), activation='relu', strides=2, padding='same')(h)
-        h = Flatten()(h)
-        h = Dense(512, activation='relu')(h)
-        
-        # Ouptut layer
-        outputs = layers.Dense(1, activation='sigmoid')(h)
-        
-    elif name=='30':
-        custom_model=True
-        learn_rate=0.000005
-        
-        inputs = layers.Input(shape=shape)
-        h = inputs        
-        h = layers.Conv2D(80,kernel_size=(4, 4), strides=1, activation='relu', padding='same')(h)
-        h = layers.BatchNormalization(epsilon=1e-5, momentum=0.99)(h)
-        h = layers.Conv2D(160,kernel_size=(4, 4), strides=1, activation='relu', padding='same')(h)
-        h = layers.BatchNormalization(epsilon=1e-5, momentum=0.99)(h)
-        h = layers.MaxPooling2D(pool_size=(3,3))(h)
-        h = layers.Conv2D(240,kernel_size=(4, 4), strides=1, activation='relu', padding='same')(h)
-        h = layers.BatchNormalization(epsilon=1e-5, momentum=0.99)(h)
-        h = layers.Conv2D(320,kernel_size=(4, 4), strides=1, activation='relu', padding='same')(h)
-        h = layers.BatchNormalization(epsilon=1e-5, momentum=0.99)(h)
-        h = layers.MaxPooling2D(pool_size=(3,3))(h)
-        
-        h = layers.Flatten()(h)
-        h = layers.Dropout(rate=0.3)(h)
-        h = layers.Dense(51, activation='relu')(h)
-        h = layers.BatchNormalization(epsilon=1e-5, momentum=0.99)(h)
-
-        # Ouptut layer
-        outputs = layers.Dense(1, activation='sigmoid')(h)    
-    
-    elif name=='31':
-        custom_model=True
-        learn_rate=0.000002
-        inputs = layers.Input(shape=shape)
-        h = inputs
-        # Convolutional layers     
-        conv_sizes=[200,200]
-        conv_args = dict(kernel_size=(4, 4), activation='relu', padding='same')
-        for conv_size in conv_sizes:
-            h = layers.Conv2D(conv_size, **conv_args)(h)
-            h = layers.BatchNormalization(epsilon=1e-5, momentum=0.99)(h)
-            h = layers.Conv2D(conv_size, **conv_args)(h)
-            h = layers.BatchNormalization(epsilon=1e-5, momentum=0.99)(h)
-            h = layers.MaxPooling2D(pool_size=(3, 3))(h)
-        
-        h = layers.Flatten()(h)
-        h = layers.Dense(51, activation='relu')(h)
-        h = layers.BatchNormalization(epsilon=1e-5, momentum=0.99)(h)
-        h = layers.Dropout(rate=0.5)(h)
-        outputs = layers.Dense(1, activation='sigmoid')(h)
-        
-    elif name=='100': # Resnet 50
-        inputs = layers.Input(shape=shape)
-        model = ResNet50(img_input=inputs)
-        learn_rate=0.0005
-        resnet=True
-    
-    elif name=='101': # Resnet 18
-        inputs = layers.Input(shape=shape)
-        model = ResNet18(img_input=inputs)
-        learn_rate=0.0005
-        resnet=True
+                        'inner_dropout':0.1, 'outer_dropout':0.3,'dense_size':51,'final_activation':'sigmoid','double_conv':False}
     
     ############################################
     ### Add more models above
