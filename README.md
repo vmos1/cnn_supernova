@@ -27,6 +27,16 @@ For further information refer: https://arxiv.org/abs/1504.02936v3
 ## Main computing code at: 
 /global/u1/v/vpa/project/jpt_notebooks/Cosmology/Supernova-cnn
 
-## Analysis code : 
+## Code for data processing: 
+0_pre_processing/
 
-# Further details:
+## Main training code
+2_main_code_training/
+## Analysis code : 
+3_analyze_results_jpt_notebooks/
+
+Location | Description 
+a | b 
+c | d 
+
+
