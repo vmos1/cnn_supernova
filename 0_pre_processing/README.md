@@ -25,3 +25,17 @@ From the website https://portal.nersc.gov/project/dessn/autoscan/
     
 6. **Check extraction 2** Check this extraction process using `5_Data_check_2.ipynb` 
 7. **Apply normalization** If required, apply the normalization (MAD normalization) to all samples using the file `6_pre_norm.py`. This creates a new .npy file.
+
+
+
+# Important file locations:
+## Data files located at 
+#### Raw downloaded data at: 
+/global/project/projectdirs/dasrepo/vpa/supernova_cnn/data/raw_data
+#### Data created after using the preprocessing codes is stored at:
+/global/project/projectdirs/dasrepo/vpa/supernova_cnn/data/gathered_data/temp_data
+#### Preprocessed data is stored at
+/global/project/projectdirs/dasrepo/vpa/supernova_cnn/data/gathered_data
+(It needs to be moved manually. This is to ensure that accidental running of the code doesn't overwrite the data.)
+#### The results are stored at : 
+/global/project/projectdirs/dasrepo/vpa/supernova_cnn/data/results_data/results
