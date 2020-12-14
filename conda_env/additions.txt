@@ -1,0 +1,6 @@
+## For env v3
+conda install -c conda-forge ipywidgets
+conda install -c intel scikit-learn
+
+conda install -c conda-forge ipympl
+conda install seaborn
