@@ -1,0 +1,23 @@
+description: 'CNN'
+output_dir: '/global/project/projectdirs/dasrepo/vpa/supernova_cnn/data/results_data/results/'
+
+data:
+    name: supernova
+    data_dir: '/global/project/projectdirs/dasrepo/vpa/supernova_cnn/data/gathered_data/input_npy_files/'
+    prefix: 'full' ### options: srch,temp,diff,processed
+
+model:
+    name: cnn
+    input_shape: [51, 51, 3]
+    n_classes: 2
+
+optimizer:
+        #name: Adam
+        lr: 0.0005 ## Not used in code
+
+training:
+    batch_size: 64
+    n_epochs: 50
+    lr_warmup_epochs: 0
+    loss: binary_crossentropy
+    metrics: [accuracy]
