@@ -16,10 +16,10 @@ The Table below describes the content of various folders in this repository
 
 | Description | Location |
 | --- | ---|
-| Data pre-processing | 0_pre_processing/ | 
-| Main code | 2_main_code_training/ |
-| Analysis code | 3_analyze_results_jpt_notebooks/ |
-| Code for inference | 6_final_summary / |
+| Data pre-processing | [0_pre_processing](https://github.com/vmos1/cnn_supernova/tree/master/0_pre_processing) | 
+| Main code | [2_main_code_training](https://github.com/vmos1/cnn_supernova/tree/master/2_main_code_training) |
+| Analysis code | [3_analyze_results_jpt_notebooks](https://github.com/vmos1/cnn_supernova/tree/master/3_analyze_results_jpt_notebooks) |
+| Code for inference | [6_final_summary](https://github.com/vmos1/cnn_supernova/tree/master/6_final_summary) / |
 
 # Running Inference
 
