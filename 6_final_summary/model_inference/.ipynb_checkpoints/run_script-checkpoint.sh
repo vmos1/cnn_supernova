@@ -1,0 +1,3 @@
+module load tensorflow
+
+python Run_inference.py -m /global/cfs/cdirs/dasrepo/vpa/supernova_cnn/data/results_data/results/final_summary_data_folder/saved_models/model_1.h5 -i /global/cfs/cdirs/dasrepo/vpa/supernova_cnn/data/results_data/results/final_summary_data_folder/sample_test_data/temp_bigger_data/input_x.npy -o /global/cfs/cdirs/dasrepo/vpa/supernova_cnn/data/results_data/results/final_summary_data_folder/results_inference/
