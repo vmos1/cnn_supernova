@@ -12,6 +12,10 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import argparse
 
+## modules for reading fits files
+from astropy.utils.data import get_pkg_data_filename
+from astropy.io import fits
+
 ## modules for parallelization of python for loop
 from multiprocessing import Pool
 from functools import partial
@@ -37,7 +41,7 @@ def f_get_df():
     '''
     
     data_dir='/global/project/projectdirs/dasrepo/vpa/supernova_cnn/data/gathered_data/'
-    fname1=data_dir+'summary_label_files.csv'
+    fname1=data_dir+'summary_label_files_fits.csv'
     df=pd.read_csv(fname1,sep=',',comment='#')
     
     ### Print summary of data
@@ -47,7 +51,6 @@ def f_get_df():
     print("Proportion of Signal-Background: {0}-{1}\nProportion of Signal: {2}".format(num_sig,num_bkgnd,num_sig*1.0/(num_sig+num_bkgnd)))
 
     return df
-
 
 def f_get_data(df,idx_arr):
     '''
@@ -68,7 +71,11 @@ def f_get_data(df,idx_arr):
             ### Extract the 3 images and create stacked numpy array
             file_list=[df[(df.ID==idx) & (df.filename.str.startswith(strg))]['file path'].values[0] for strg in ['temp','srch','diff']]
             
-            img=np.dstack([plt.imread(fle) for fle in file_list]) ## Create stacked numpy array of 3 images
+            ## for .gif files
+#             img=np.dstack([plt.imread(fle) for fle in file_list]) ## Create stacked numpy array of 3 images
+            ## for .fits files
+            img=np.dstack([fits.getdata(fle,ext=0) for fle in file_list]) ## Create stacked numpy array of 3 images
+
             combined_imgs_lst.append(img)             ## Append image to list
 
             ### Extract the first label

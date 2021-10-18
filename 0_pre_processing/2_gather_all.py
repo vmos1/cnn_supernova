@@ -14,8 +14,8 @@ import time
 ### Define locations
 
 data_dir='/global/project/projectdirs/dasrepo/vpa/supernova_cnn/data/raw_data/'
-f1='/global/project/projectdirs/dasrepo/vpa/supernova_cnn/data/gathered_data/autoscan_features.3.csv'
-f2='/global/project/projectdirs/dasrepo/vpa/supernova_cnn/data/gathered_data/gathered_filepaths.csv'
+f1='/global/project/projectdirs/dasrepo/vpa/supernova_cnn/data/gathered_data/relabeled_autoscan_features.csv'
+f2='/global/project/projectdirs/dasrepo/vpa/supernova_cnn/data/gathered_data/gathered_filepaths_fits.csv'
 
 t1=time.time()
 
@@ -58,7 +58,7 @@ print("Total time",t3-t1)
 
 #####################
 ### Write to file
-fname='/global/project/projectdirs/dasrepo/vpa/supernova_cnn/data/gathered_data/summary_label_files.csv'
+fname='/global/project/projectdirs/dasrepo/vpa/supernova_cnn/data/gathered_data/summary_label_files_fits.csv'
 df2.to_csv(fname,mode='w',index=False)
 
 

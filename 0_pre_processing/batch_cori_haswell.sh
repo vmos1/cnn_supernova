@@ -10,6 +10,8 @@
 #################
 
 echo "--start date" `date` `date +%s`
+conda activate v3
 export OMP_NUM_THREADS=32
 python 4_extract_to_npy.py -b 1000 -c 32
+conda deactivate
 echo "--end date" `date` `date +%s`
