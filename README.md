@@ -1,6 +1,7 @@
 Jan 24, 2020
 # Introduction
 This repository contains codes used to train 2D layered CNNs for performing classification on supernova data (Artifact vs non-artifact).
+This work has been published in [2022 PASP 134 094501](https://doi.org/10.1088/1538-3873/ac8375).
 
 Tools for use for other datasets:
 1. Data visualization
